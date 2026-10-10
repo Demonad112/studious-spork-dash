@@ -771,9 +771,71 @@ pub fn encode(frame: &Frame) -> Result<String> {
     Ok(text)
 }
 
+/// For a frame that failed [`decode`]: if it was an `action` with a usable id, the rejection to
+/// send back. An action kind outside the allowlist is `unknown-action`; anything else wrong with
+/// it is `malformed`. Returns `None` when there is no id to answer.
+pub fn reject_undecodable_action(raw: &str) -> Option<ActionResult> {
+    if raw.len() > MAX_FRAME_BYTES {
+        return None;
+    }
+    let value: serde_json::Value = serde_json::from_str(raw).ok()?;
+    if value.get("type")?.as_str()? != "action" {
+        return None;
+    }
+    let id = value.get("actionId")?.as_str()?;
+    if !is_action_id(id) {
+        return None;
+    }
+    let unknown_kind = value
+        .get("action")
+        .and_then(|a| a.as_str())
+        .is_some_and(|a| !matches!(a, "status" | "next" | "done" | "cancel"));
+    let reason = if unknown_kind {
+        RejectReason::UnknownAction
+    } else {
+        RejectReason::Malformed
+    };
+    Some(ActionResult {
+        action_id: id.to_string(),
+        outcome: Outcome::Rejected,
+        reason: Some(reason),
+        state: None,
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn an_action_outside_the_allowlist_is_answered_as_unknown_action() {
+        let raw = r#"{"v":1,"type":"action","actionId":"act-del-0001","action":"delete"}"#;
+        assert!(decode(raw).is_err());
+        let r = reject_undecodable_action(raw).unwrap();
+        assert_eq!(
+            (r.outcome, r.reason),
+            (Outcome::Rejected, Some(RejectReason::UnknownAction))
+        );
+        assert_eq!(r.action_id, "act-del-0001");
+    }
+
+    #[test]
+    fn an_allowlisted_action_with_an_extra_field_is_answered_as_malformed() {
+        let raw =
+            r#"{"v":1,"type":"action","actionId":"act-can-0001","action":"cancel","path":"x"}"#;
+        let r = reject_undecodable_action(raw).unwrap();
+        assert_eq!(r.reason, Some(RejectReason::Malformed));
+    }
+
+    #[test]
+    fn an_undecodable_frame_without_a_usable_action_id_gets_no_answer() {
+        assert_eq!(reject_undecodable_action(r#"{"v":1,"type":"ping"}"#), None);
+        assert_eq!(
+            reject_undecodable_action(r#"{"v":1,"type":"action","actionId":"a1","action":"x"}"#),
+            None
+        );
+        assert_eq!(reject_undecodable_action("nope"), None);
+    }
 
     #[test]
     fn a_ping_frame_encodes_to_the_byte_constant() {
