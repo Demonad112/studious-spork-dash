@@ -16,14 +16,14 @@ Dashboard (Vue SPA, behind Cloudflare Access) <-> relay (Cloudflare Workers + Du
 
 ## Commands
 
-| Task                | Command                                                                                                      |
-| ------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Install             | `corepack pnpm install`                                                                                      |
-| All gates           | `corepack pnpm quality`                                                                                      |
-| TS tests            | `corepack pnpm test:ts`                                                                                      |
-| Rust tests          | `corepack pnpm test:rust` (uses `--no-fail-fast`)                                                            |
-| Windows-only clippy | `cargo clippy --manifest-path agent/Cargo.toml --all-targets --target x86_64-pc-windows-msvc -- -D warnings` |
-| Dev ports           | dashboard Vite 1440, `wrangler dev` 8787                                                                     |
+| Task                | Command                                                                                                                    |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Install             | `corepack pnpm install`                                                                                                    |
+| All gates           | `corepack pnpm quality`                                                                                                    |
+| TS tests            | `corepack pnpm test:ts`                                                                                                    |
+| Rust tests          | `corepack pnpm test:rust` (uses `--no-fail-fast`)                                                                          |
+| Windows-only clippy | `cargo clippy --manifest-path agent/Cargo.toml -p agent-core --all-targets --target x86_64-pc-windows-msvc -- -D warnings` |
+| Dev ports           | dashboard Vite 1440, `wrangler dev` 8787                                                                                   |
 
 ## Layout
 

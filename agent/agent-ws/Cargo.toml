@@ -9,3 +9,23 @@ rust-version.workspace = true
 
 [dependencies]
 agent-core = { path = "../agent-core" }
+base64 = "0.23.1"
+ed25519-dalek = "3.0.0"
+futures-util = "0.3.34"
+getrandom = "0.4.3"
+rustls = { version = "0.23.45", default-features = false, features = ["ring", "std", "tls12"] }
+rustls-native-certs = { version = "0.8.4", optional = true }
+sha2 = "0.11.0"
+tokio = { version = "1.53.2", default-features = false, features = ["rt", "net", "time", "sync", "macros"] }
+tokio-tungstenite = { version = "0.30.0", default-features = false, features = ["connect", "rustls-tls-webpki-roots"] }
+ureq = { version = "3.4.2", default-features = false, features = ["rustls"] }
+webpki-roots = "1.0.9"
+serde.workspace = true
+serde_json.workspace = true
+
+[features]
+# Trust the operating system's certificate store as an alternative to the bundled roots.
+os-roots = ["dep:rustls-native-certs"]
+
+[dev-dependencies]
+tokio = { version = "1.53.2", default-features = false, features = ["rt", "net", "time", "macros", "io-util"] }
