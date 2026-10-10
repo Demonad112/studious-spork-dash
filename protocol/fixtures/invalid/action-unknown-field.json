@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "type": "action",
+  "actionId": "act-done-0001",
+  "action": "done",
+  "promptId": "p-1",
+  "force": true
+}

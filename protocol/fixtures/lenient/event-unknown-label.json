@@ -1,0 +1,22 @@
+{
+  "input": {
+    "v": 1,
+    "type": "event",
+    "seq": 12,
+    "kind": "prompt-opened",
+    "promptId": "p-9",
+    "expects": "done",
+    "labelId": "wrap-up",
+    "blocking": false
+  },
+  "normalized": {
+    "v": 1,
+    "type": "event",
+    "seq": 12,
+    "kind": "prompt-opened",
+    "promptId": "p-9",
+    "expects": "done",
+    "labelId": "other",
+    "blocking": false
+  }
+}

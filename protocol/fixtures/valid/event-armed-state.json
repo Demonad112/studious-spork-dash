@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "type": "event",
+  "seq": 0,
+  "kind": "armed-state",
+  "armed": true,
+  "expiresAtMs": 1790014400000
+}

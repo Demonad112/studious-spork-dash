@@ -1,0 +1,6 @@
+{
+  "v": 1,
+  "type": "auth-response",
+  "agentNonce": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQ",
+  "signature": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_abcdefghijklmnopqrstuv"
+}

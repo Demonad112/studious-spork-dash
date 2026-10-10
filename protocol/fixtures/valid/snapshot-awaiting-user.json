@@ -1,0 +1,27 @@
+{
+  "v": 1,
+  "type": "snapshot",
+  "seq": 20,
+  "armed": true,
+  "state": "awaiting-user",
+  "jobId": "00112233445566778899aabbccddeeff",
+  "jobKind": "record-watch",
+  "progress": {
+    "step": "watching",
+    "percent": 55,
+    "filesDone": 55,
+    "filesTotal": 100,
+    "bytesDone": 5500,
+    "bytesTotal": 10000,
+    "ok": 55,
+    "skipped": 0,
+    "failed": 0
+  },
+  "prompt": {
+    "promptId": "p-1",
+    "expects": "done",
+    "labelId": "finish-and-check",
+    "blocking": false
+  },
+  "terminal": null
+}

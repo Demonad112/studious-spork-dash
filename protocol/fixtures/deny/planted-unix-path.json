@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "type": "event",
+  "seq": 1,
+  "kind": "prompt-opened",
+  "promptId": "p-1",
+  "expects": "done",
+  "labelId": "other",
+  "blocking": false,
+  "text": "/home/bob/file"
+}

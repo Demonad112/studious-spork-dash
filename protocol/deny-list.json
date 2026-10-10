@@ -1,0 +1,35 @@
+{
+  "description": "Field names that must never appear in any fixture, simulator event or audit row. See docs/host-profile.md section 4.",
+  "keys": [
+    "path",
+    "paths",
+    "relativePath",
+    "file",
+    "fileName",
+    "filename",
+    "current",
+    "folder",
+    "source",
+    "destination",
+    "hostname",
+    "host",
+    "machine",
+    "machineName",
+    "computerName",
+    "user",
+    "userName",
+    "username",
+    "client",
+    "ticket",
+    "technician",
+    "runId",
+    "errorText",
+    "errorMessage",
+    "message",
+    "hash"
+  ],
+  "valuePatterns": {
+    "pathSeparator": "[/\\\\]",
+    "driveLetter": "(^|[^A-Za-z0-9])[A-Za-z]:[\\\\/]?"
+  }
+}

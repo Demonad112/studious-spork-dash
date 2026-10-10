@@ -1,0 +1,7 @@
+{
+  "v": 1,
+  "type": "resync-result",
+  "fromSeq": 38,
+  "toSeq": 42,
+  "gap": false
+}

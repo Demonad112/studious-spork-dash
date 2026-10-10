@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "type": "event",
+  "seq": 10,
+  "kind": "status",
+  "status": "failed",
+  "failureCode": "not-enough-space"
+}
