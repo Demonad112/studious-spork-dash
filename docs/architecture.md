@@ -66,3 +66,7 @@ Local development runs two processes: `pnpm --filter @remote-console/relay dev:r
 ## Shared contracts
 
 `protocol/fixtures` holds golden frames and two behaviour tables (`state-machine.json`, `action-rules.json`). Rust and TypeScript both run them, so the agent and the relay cannot drift apart.
+
+## Dashboard (`dashboard/`)
+
+Vue 3 SPA built to `dashboard/dist` and served by the `dashboard` Worker through its `ASSETS` binding (every request passes the Access JWT check first). `LiveSession` folds relay frames into the shared `Machine`; `LiveConnection` owns the browser socket (hello, resync from the last seq, 25 s ping, backoff reconnect). All colours are `--app-*` tokens in `src/style.css`; light is the default and `data-theme='dark'` overrides.
