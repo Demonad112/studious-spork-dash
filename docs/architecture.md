@@ -11,8 +11,8 @@ The agent never listens. It dials out only while the local user has armed it. Th
 | Crate        | Role                                                                                                                     |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------ |
 | `agent-core` | Transport-free layer: wire types, state machine, replay ring, allowlist, arming, audit, cleanup. No sockets, no threads. |
-| `agent-ws`   | The outbound WebSocket transport on its own thread with its own runtime (Batch 4).                                       |
-| `agent-sim`  | A stand-in app with named scripts, used for development and e2e (CLI in Batch 4).                                        |
+| `agent-ws`   | The outbound WebSocket transport, identity key and pairing client. One thread while armed, none otherwise.               |
+| `agent-sim`  | A stand-in app with named scripts, used for development and e2e. CLI: `pair` and `run <script>`.                         |
 
 ### The integration surface
 
@@ -36,6 +36,18 @@ Arming is a local gesture only: the host calls `RemoteControl::arm` (or implemen
 
 Disabled or disarmed, the agent opens no ports and creates no files, folders or threads (`tests/creates_nothing.rs` proves it). It writes only under the `data_dir` the host passes in. Anything persistent goes through the `CleanupRegistry`, which is emptied on every disarm; stale leftovers from a crashed run are swept on arm.
 
+### The transport (`agent-ws`)
+
+`AgentWs::install` sets the layer's waker. Arming starts one thread named `remote-console-ws` with its own current-thread tokio runtime; disarming (or a new session id) makes it close the socket and exit, normally within a few milliseconds and always within the 2 s the host is promised. Disarmed, no thread, socket or file exists.
+
+- **Connection:** `tokio-tungstenite` over rustls with the `ring` provider and the bundled `webpki-roots`. The `os-roots` cargo feature plus `WsConfig::trust_os_store` trusts the operating system store instead. `ws://` is allowed for development; the layer's config validation decides which URLs are accepted.
+- **Handshake:** `hello`, `auth-challenge`, `auth-response` (Ed25519 over `agent-auth-v1|installId|sessionId|nonce|agentNonce`), `auth-ok`. The transport then marks the layer connected and answers the relay's `resync` through `RemoteControl::handle_frame`. It sends nothing else until that first resync has been answered.
+- **Keepalive:** the byte-constant `ping` frame every 25 s; the relay answers without waking. Nothing heard for 75 s drops the connection.
+- **Reconnect:** exponential 1 s to 60 s with jitter; the delay resets after a connection stayed authenticated for 10 s. A `locked`, `not-paired` or `unauthorized` error waits about 60 s instead, and `locked` also sets the layer's locked flag (cleared by the next `auth-ok`).
+- **Identity:** `Identity` keeps a random install id and an Ed25519 seed in the host's `SecretStore` (names `remote-console-install-id`, `remote-console-signing-key`). `agent-sim` stores them as plain files under its data folder; a real host supplies DPAPI.
+- **Pairing:** `agent_ws::pairing::{pair_start, pair_status}` are blocking `ureq` calls meant for the one-off enrolment screen, not the transport thread.
+- **Observer:** an optional closure receives `TransportEvent`s (`Connecting`, `Authenticated`, `Disconnected(code)`, `Waiting(ms)`). They carry codes only.
+
 ## Relay (`relay/`)
 
 Two Workers share two Durable Object classes (both SQLite-backed, migration `v1`).
@@ -49,7 +61,7 @@ Two Workers share two Durable Object classes (both SQLite-backed, migration `v1`
 
 Everything the relay needs to validate an action lives in Durable Object SQLite, so an eviction changes nothing. The relay applies agent events with the same `Machine` as the agent and checks browser actions with the same `decideAction` before forwarding them; the agent checks again and never trusts the relay.
 
-Local development runs two processes: `pnpm --filter @remote-console/relay dev:relay` (port 8787) and `dev:dashboard` (port 8788, with `--var ALLOW_DEV_AUTH:true` for the bypass). The dashboard process reaches the relay's Durable Objects across processes.
+Local development runs two processes: `pnpm --filter @remote-console/relay dev:relay` (port 8787) and `dev:dashboard` (port 8788; copy `relay/.dev.vars.example` to `relay/.dev.vars` for the dev auth bypass). The dashboard process reaches the relay's Durable Objects across processes.
 
 ## Shared contracts
 
