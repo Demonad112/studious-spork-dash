@@ -1,0 +1,2452 @@
+{
+  "description": "Each case starts in idle. Every step applies one event and states whether it is legal and the state afterwards. Illegal events leave the state unchanged.",
+  "cases": [
+    {
+      "name": "idle then job-started",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "idle then step",
+      "steps": [
+        {
+          "event": {
+            "kind": "step",
+            "step": "copying"
+          },
+          "expect": {
+            "ok": false,
+            "state": "idle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "idle then step-done",
+      "steps": [
+        {
+          "event": {
+            "kind": "step",
+            "step": "done"
+          },
+          "expect": {
+            "ok": false,
+            "state": "idle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "idle then progress",
+      "steps": [
+        {
+          "event": {
+            "kind": "progress",
+            "step": "copying",
+            "percent": 10,
+            "filesDone": 1,
+            "filesTotal": 10,
+            "bytesDone": 1,
+            "bytesTotal": 10,
+            "ok": 1,
+            "skipped": 0,
+            "failed": 0
+          },
+          "expect": {
+            "ok": false,
+            "state": "idle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "idle then prompt-opened",
+      "steps": [
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-2",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": false,
+            "state": "idle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "idle then prompt-closed-open",
+      "steps": [
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-1",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": false,
+            "state": "idle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "idle then prompt-closed-other",
+      "steps": [
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-other",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": false,
+            "state": "idle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "idle then status-completed",
+      "steps": [
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": false,
+            "state": "idle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "idle then status-cancelled",
+      "steps": [
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": false,
+            "state": "idle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "idle then status-failed",
+      "steps": [
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": false,
+            "state": "idle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "idle then armed-state",
+      "steps": [
+        {
+          "event": {
+            "kind": "armed-state",
+            "armed": true,
+            "expiresAtMs": null
+          },
+          "expect": {
+            "ok": true,
+            "state": "idle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "idle then unknown",
+      "steps": [
+        {
+          "event": {
+            "kind": "telemetry"
+          },
+          "expect": {
+            "ok": true,
+            "state": "idle"
+          }
+        }
+      ]
+    },
+    {
+      "name": "running then job-started",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": false,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "running then step",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "step",
+            "step": "copying"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "running then step-done",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "step",
+            "step": "done"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "running then progress",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "progress",
+            "step": "copying",
+            "percent": 10,
+            "filesDone": 1,
+            "filesTotal": 10,
+            "bytesDone": 1,
+            "bytesTotal": 10,
+            "ok": 1,
+            "skipped": 0,
+            "failed": 0
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "running then prompt-opened",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-2",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "running then prompt-closed-open",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-1",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": false,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "running then prompt-closed-other",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-other",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": false,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "running then status-completed",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "running then status-cancelled",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "running then status-failed",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "running then armed-state",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "armed-state",
+            "armed": true,
+            "expiresAtMs": null
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "running then unknown",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "telemetry"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "awaiting-user then job-started",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": false,
+            "state": "awaiting-user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "awaiting-user then step",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "step",
+            "step": "copying"
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "awaiting-user then step-done",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "step",
+            "step": "done"
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "awaiting-user then progress",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "progress",
+            "step": "copying",
+            "percent": 10,
+            "filesDone": 1,
+            "filesTotal": 10,
+            "bytesDone": 1,
+            "bytesTotal": 10,
+            "ok": 1,
+            "skipped": 0,
+            "failed": 0
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "awaiting-user then prompt-opened",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-2",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": false,
+            "state": "awaiting-user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "awaiting-user then prompt-closed-open",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-1",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "awaiting-user then prompt-closed-other",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-other",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": false,
+            "state": "awaiting-user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "awaiting-user then status-completed",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "awaiting-user then status-cancelled",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "awaiting-user then status-failed",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "awaiting-user then armed-state",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "armed-state",
+            "armed": true,
+            "expiresAtMs": null
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "awaiting-user then unknown",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "telemetry"
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "completed then job-started",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "completed then step",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "step",
+            "step": "copying"
+          },
+          "expect": {
+            "ok": false,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "completed then step-done",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "step",
+            "step": "done"
+          },
+          "expect": {
+            "ok": false,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "completed then progress",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "progress",
+            "step": "copying",
+            "percent": 10,
+            "filesDone": 1,
+            "filesTotal": 10,
+            "bytesDone": 1,
+            "bytesTotal": 10,
+            "ok": 1,
+            "skipped": 0,
+            "failed": 0
+          },
+          "expect": {
+            "ok": false,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "completed then prompt-opened",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-2",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": false,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "completed then prompt-closed-open",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-1",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": false,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "completed then prompt-closed-other",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-other",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": false,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "completed then status-completed",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": false,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "completed then status-cancelled",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": false,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "completed then status-failed",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": false,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "completed then armed-state",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "armed-state",
+            "armed": true,
+            "expiresAtMs": null
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "completed then unknown",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "telemetry"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelled then job-started",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        },
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelled then step",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        },
+        {
+          "event": {
+            "kind": "step",
+            "step": "copying"
+          },
+          "expect": {
+            "ok": false,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelled then step-done",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        },
+        {
+          "event": {
+            "kind": "step",
+            "step": "done"
+          },
+          "expect": {
+            "ok": false,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelled then progress",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        },
+        {
+          "event": {
+            "kind": "progress",
+            "step": "copying",
+            "percent": 10,
+            "filesDone": 1,
+            "filesTotal": 10,
+            "bytesDone": 1,
+            "bytesTotal": 10,
+            "ok": 1,
+            "skipped": 0,
+            "failed": 0
+          },
+          "expect": {
+            "ok": false,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelled then prompt-opened",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-2",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": false,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelled then prompt-closed-open",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-1",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": false,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelled then prompt-closed-other",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-other",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": false,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelled then status-completed",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": false,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelled then status-cancelled",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": false,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelled then status-failed",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": false,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelled then armed-state",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        },
+        {
+          "event": {
+            "kind": "armed-state",
+            "armed": true,
+            "expiresAtMs": null
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancelled then unknown",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        },
+        {
+          "event": {
+            "kind": "telemetry"
+          },
+          "expect": {
+            "ok": true,
+            "state": "cancelled"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed then job-started",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        },
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed then step",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        },
+        {
+          "event": {
+            "kind": "step",
+            "step": "copying"
+          },
+          "expect": {
+            "ok": false,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed then step-done",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        },
+        {
+          "event": {
+            "kind": "step",
+            "step": "done"
+          },
+          "expect": {
+            "ok": false,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed then progress",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        },
+        {
+          "event": {
+            "kind": "progress",
+            "step": "copying",
+            "percent": 10,
+            "filesDone": 1,
+            "filesTotal": 10,
+            "bytesDone": 1,
+            "bytesTotal": 10,
+            "ok": 1,
+            "skipped": 0,
+            "failed": 0
+          },
+          "expect": {
+            "ok": false,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed then prompt-opened",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-2",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": false,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed then prompt-closed-open",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-1",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": false,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed then prompt-closed-other",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-other",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": false,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed then status-completed",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": false,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed then status-cancelled",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "cancelled"
+          },
+          "expect": {
+            "ok": false,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed then status-failed",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": false,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed then armed-state",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        },
+        {
+          "event": {
+            "kind": "armed-state",
+            "armed": true,
+            "expiresAtMs": null
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "failed then unknown",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "failed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        },
+        {
+          "event": {
+            "kind": "telemetry"
+          },
+          "expect": {
+            "ok": true,
+            "state": "failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "a watch job with a non-blocking prompt runs to completion",
+      "steps": [
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "progress",
+            "step": "copying",
+            "percent": 10,
+            "filesDone": 1,
+            "filesTotal": 10,
+            "bytesDone": 1,
+            "bytesTotal": 10,
+            "ok": 1,
+            "skipped": 0,
+            "failed": 0
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-opened",
+            "promptId": "p-1",
+            "expects": "done",
+            "labelId": "finish-and-check",
+            "blocking": false
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "progress",
+            "step": "copying",
+            "percent": 10,
+            "filesDone": 1,
+            "filesTotal": 10,
+            "bytesDone": 1,
+            "bytesTotal": 10,
+            "ok": 1,
+            "skipped": 0,
+            "failed": 0
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "step",
+            "step": "done"
+          },
+          "expect": {
+            "ok": true,
+            "state": "awaiting-user"
+          }
+        },
+        {
+          "event": {
+            "kind": "prompt-closed",
+            "promptId": "p-1",
+            "reason": "answered-remote"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        },
+        {
+          "event": {
+            "kind": "status",
+            "status": "completed"
+          },
+          "expect": {
+            "ok": true,
+            "state": "completed"
+          }
+        },
+        {
+          "event": {
+            "kind": "job-started",
+            "jobId": "00112233445566778899aabbccddeeff",
+            "jobKind": "record-watch"
+          },
+          "expect": {
+            "ok": true,
+            "state": "running"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -63,7 +63,13 @@ Events carry counters, enum ids and codes only. Never on the wire: paths, file n
 - `seq` is a monotonic u64 per session, starting at 1. `armed-state` events from the relay use `seq` 0 and are not replayed.
 - Progress is coalesced into a latest-progress snapshot. The replay ring (agent 256, relay 64) holds discrete events only.
 - The transport sends the progress snapshot at most once per second (configurable) and always flushes it before a discrete event, so ordering holds.
+- A `progress` frame carries the newest discrete sequence number and does not consume one. Clients treat progress as latest-wins.
+- After `auth-ok` the relay sends the agent a `resync` with the last sequence number it holds for the session (0 for a new session). The agent answers like any other resync, so a reconnect needs no special path.
 - `resync(lastSeq)` is answered by `resync-result`, then one `snapshot`, then every later event the ring still holds. `gap: true` means the ring no longer reaches back to `lastSeq`: the client rebuilds from the snapshot alone.
+
+## Answering an undecodable action
+
+If an `action` frame fails to decode but carries a usable `actionId`, the receiver still answers it: an action kind outside the allowlist gets `rejected` with `unknown-action`, anything else wrong with it gets `malformed`. A frame with no usable id gets no answer. In Rust this is `reject_undecodable_action`.
 
 ## Authentication
 

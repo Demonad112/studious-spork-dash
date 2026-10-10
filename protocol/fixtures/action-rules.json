@@ -1,0 +1,253 @@
+{
+  "description": "Pure allowlist decision: state, open prompt and previously issued prompt ids against one action. Armed, expiry, rate limit, duplicates and lock are checked separately.",
+  "cases": [
+    {
+      "name": "status in idle",
+      "state": "idle",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "status"
+      },
+      "expect": "accepted"
+    },
+    {
+      "name": "status in running",
+      "state": "running",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "status"
+      },
+      "expect": "accepted"
+    },
+    {
+      "name": "status in awaiting-user",
+      "state": "awaiting-user",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "status"
+      },
+      "expect": "accepted"
+    },
+    {
+      "name": "status in completed",
+      "state": "completed",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "status"
+      },
+      "expect": "accepted"
+    },
+    {
+      "name": "status in cancelled",
+      "state": "cancelled",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "status"
+      },
+      "expect": "accepted"
+    },
+    {
+      "name": "status in failed",
+      "state": "failed",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "status"
+      },
+      "expect": "accepted"
+    },
+    {
+      "name": "cancel in idle",
+      "state": "idle",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "cancel"
+      },
+      "expect": "invalid-state"
+    },
+    {
+      "name": "cancel in running",
+      "state": "running",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "cancel"
+      },
+      "expect": "accepted"
+    },
+    {
+      "name": "cancel in awaiting-user",
+      "state": "awaiting-user",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "cancel"
+      },
+      "expect": "accepted"
+    },
+    {
+      "name": "cancel in completed",
+      "state": "completed",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "cancel"
+      },
+      "expect": "invalid-state"
+    },
+    {
+      "name": "cancel in cancelled",
+      "state": "cancelled",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "cancel"
+      },
+      "expect": "invalid-state"
+    },
+    {
+      "name": "cancel in failed",
+      "state": "failed",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "cancel"
+      },
+      "expect": "invalid-state"
+    },
+    {
+      "name": "done for the open done prompt",
+      "state": "awaiting-user",
+      "prompt": {
+        "promptId": "p-1",
+        "expects": "done"
+      },
+      "issued": ["p-1"],
+      "action": {
+        "action": "done",
+        "promptId": "p-1"
+      },
+      "expect": "accepted"
+    },
+    {
+      "name": "next for the open done prompt",
+      "state": "awaiting-user",
+      "prompt": {
+        "promptId": "p-1",
+        "expects": "done"
+      },
+      "issued": ["p-1"],
+      "action": {
+        "action": "next",
+        "promptId": "p-1"
+      },
+      "expect": "invalid-state"
+    },
+    {
+      "name": "next for the open next prompt",
+      "state": "awaiting-user",
+      "prompt": {
+        "promptId": "p-1",
+        "expects": "next"
+      },
+      "issued": ["p-1"],
+      "action": {
+        "action": "next",
+        "promptId": "p-1"
+      },
+      "expect": "accepted"
+    },
+    {
+      "name": "done for the open next prompt",
+      "state": "awaiting-user",
+      "prompt": {
+        "promptId": "p-1",
+        "expects": "next"
+      },
+      "issued": ["p-1"],
+      "action": {
+        "action": "done",
+        "promptId": "p-1"
+      },
+      "expect": "invalid-state"
+    },
+    {
+      "name": "done naming another prompt than the open one",
+      "state": "awaiting-user",
+      "prompt": {
+        "promptId": "p-1",
+        "expects": "done"
+      },
+      "issued": ["p-1", "p-0"],
+      "action": {
+        "action": "done",
+        "promptId": "p-0"
+      },
+      "expect": "stale-prompt"
+    },
+    {
+      "name": "next naming another prompt than the open one",
+      "state": "awaiting-user",
+      "prompt": {
+        "promptId": "p-1",
+        "expects": "next"
+      },
+      "issued": ["p-1", "p-0"],
+      "action": {
+        "action": "next",
+        "promptId": "p-0"
+      },
+      "expect": "stale-prompt"
+    },
+    {
+      "name": "done for a prompt closed while the job runs",
+      "state": "running",
+      "prompt": null,
+      "issued": ["p-1"],
+      "action": {
+        "action": "done",
+        "promptId": "p-1"
+      },
+      "expect": "stale-prompt"
+    },
+    {
+      "name": "done for a prompt that ended with the job",
+      "state": "completed",
+      "prompt": null,
+      "issued": ["p-1"],
+      "action": {
+        "action": "done",
+        "promptId": "p-1"
+      },
+      "expect": "stale-prompt"
+    },
+    {
+      "name": "done for a prompt never offered while running",
+      "state": "running",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "done",
+        "promptId": "p-9"
+      },
+      "expect": "invalid-state"
+    },
+    {
+      "name": "next for a prompt never offered while idle",
+      "state": "idle",
+      "prompt": null,
+      "issued": [],
+      "action": {
+        "action": "next",
+        "promptId": "p-9"
+      },
+      "expect": "invalid-state"
+    }
+  ]
+}

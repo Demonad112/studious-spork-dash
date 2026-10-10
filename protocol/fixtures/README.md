@@ -13,3 +13,10 @@ Shared by the Rust and TypeScript contract tests.
 
 Oversize frames (over 16 KiB) are generated inside the tests rather than stored.
 No fixture in `valid/`, `lenient/` or `pairing/` may contain a path separator, a drive letter, or a key from `../deny-list.json`. `invalid/` may, because some of its cases exist to prove those are rejected.
+
+## Behaviour tables
+
+| File                 | Contract                                                                                                     |
+| -------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `state-machine.json` | Every state against every trigger. The Rust `Machine` and the relay's TypeScript machine must agree with it. |
+| `action-rules.json`  | The pure allowlist decision (`decide`). The agent and the relay must agree with it.                          |
