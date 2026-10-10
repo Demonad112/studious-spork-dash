@@ -95,4 +95,4 @@ The relay stores only the public key. The nonce is single use and expires in 60 
 
 ## Pairing (HTTP)
 
-Bodies are defined in `protocol/schemas/pairing.schema.json`: `pair-start`, `pair-start-result`, `pair-status`, `pair-status-result`, `pair-approve`. See `docs/security.md` for the flow and limits.
+Bodies are defined in `protocol/schemas/pairing.schema.json`: `pair-start`, `pair-start-result`, `pair-status`, `pair-status-result`, `pair-lookup`, `pair-lookup-result`, `pair-approve`. The agent uses the first four; the dashboard uses the last three. Typed codes are normalised before decoding (`normalizePairingCode`). See `docs/security.md` for the flow and limits.

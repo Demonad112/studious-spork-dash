@@ -35,6 +35,10 @@ Dashboard (Vue SPA, behind Cloudflare Access) <-> relay (Cloudflare Workers + Du
 - On the owner's laptop Windows Application Control can block test binaries (os error 4551): use `cargo test --workspace --no-fail-fast`.
 - The Bash tool halves backslashes in heredocs: write files containing them with Write/Edit.
 - Prettier covers `.md` and `.json`: format docs.
+- `CI=true` makes pnpm freeze the lockfile and stops it asking to reinstall: set it on every pnpm call in the sandbox, and add `--no-frozen-lockfile` after changing dependencies.
+- `esbuild` and `workerd` need `allowBuilds: true` in `pnpm-workspace.yaml` or their binaries are missing.
+- Do not run `pkill`/`pgrep -f` on `wrangler`: the pattern matches the Bash tool's own shell and kills it.
+- Vitest in `relay/` keeps Durable Object storage across tests in one file: reset what a test fills.
 - pnpm may add `minimumReleaseAgeExclude` entries to `pnpm-workspace.yaml` for freshly released pins. That is expected.
 
 ## Version deviations from the kickoff prompt

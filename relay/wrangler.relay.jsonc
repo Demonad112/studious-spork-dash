@@ -1,0 +1,13 @@
+{
+  "name": "remote-console-relay",
+  "main": "src/relay-worker.ts",
+  "compatibility_date": "2026-04-07",
+  "durable_objects": {
+    "bindings": [
+      { "name": "REGISTRY", "class_name": "RegistryDO" },
+      { "name": "SESSION", "class_name": "SessionDO" },
+    ],
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["RegistryDO", "SessionDO"] }],
+  "observability": { "enabled": true },
+}

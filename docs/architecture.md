@@ -36,6 +36,21 @@ Arming is a local gesture only: the host calls `RemoteControl::arm` (or implemen
 
 Disabled or disarmed, the agent opens no ports and creates no files, folders or threads (`tests/creates_nothing.rs` proves it). It writes only under the `data_dir` the host passes in. Anything persistent goes through the `CleanupRegistry`, which is emptied on every disarm; stale leftovers from a crashed run are swept on arm.
 
+## Relay (`relay/`)
+
+Two Workers share two Durable Object classes (both SQLite-backed, migration `v1`).
+
+| Part           | Role                                                                                                                                                |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `relay` Worker | Public. Pairing endpoints and the agent WebSocket. Exports `RegistryDO` and `SessionDO`.                                                            |
+| `dashboard`    | Behind Access. Assets, `/api/*`, the browser WebSocket. Binds the same classes with `script_name`. Handlers are factories so tests inject a JWKS.   |
+| `RegistryDO`   | One instance. Installs, pending pairings, pairing audit.                                                                                            |
+| `SessionDO`    | One per install. Hibernatable sockets (1 agent, 3 browsers), the stored machine, replay ring, dedup set, token bucket, issued prompt ids and audit. |
+
+Everything the relay needs to validate an action lives in Durable Object SQLite, so an eviction changes nothing. The relay applies agent events with the same `Machine` as the agent and checks browser actions with the same `decideAction` before forwarding them; the agent checks again and never trusts the relay.
+
+Local development runs two processes: `pnpm --filter @remote-console/relay dev:relay` (port 8787) and `dev:dashboard` (port 8788, with `--var ALLOW_DEV_AUTH:true` for the bypass). The dashboard process reaches the relay's Durable Objects across processes.
+
 ## Shared contracts
 
 `protocol/fixtures` holds golden frames and two behaviour tables (`state-machine.json`, `action-rules.json`). Rust and TypeScript both run them, so the agent and the relay cannot drift apart.
