@@ -1,0 +1,33 @@
+{
+  "input": {
+    "v": 1,
+    "type": "event",
+    "seq": 12,
+    "kind": "progress",
+    "step": "copying",
+    "percent": 40,
+    "filesDone": 4,
+    "filesTotal": 10,
+    "bytesDone": 4096,
+    "bytesTotal": 10240,
+    "ok": 4,
+    "skipped": 0,
+    "failed": 0,
+    "extra": 1
+  },
+  "normalized": {
+    "v": 1,
+    "type": "event",
+    "seq": 12,
+    "kind": "progress",
+    "step": "copying",
+    "percent": 40,
+    "filesDone": 4,
+    "filesTotal": 10,
+    "bytesDone": 4096,
+    "bytesTotal": 10240,
+    "ok": 4,
+    "skipped": 0,
+    "failed": 0
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "v": 1,
+  "type": "action",
+  "actionId": "act-next-0001",
+  "action": "next",
+  "promptId": "p-2"
+}

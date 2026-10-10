@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "type": "event",
+  "seq": 9,
+  "kind": "status",
+  "status": "completed",
+  "summary": {
+    "filesPlanned": 10,
+    "bytesPlanned": 10240,
+    "ok": 7,
+    "okBytes": 7168,
+    "skipped": 1,
+    "failed": 2,
+    "failedBytes": 2048,
+    "durationMs": 93000
+  }
+}

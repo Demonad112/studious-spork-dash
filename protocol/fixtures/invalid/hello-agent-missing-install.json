@@ -1,0 +1,9 @@
+{
+  "v": 1,
+  "type": "hello",
+  "role": "agent",
+  "protocolVersions": [1],
+  "sessionId": "fedcba9876543210fedcba9876543210",
+  "appId": "deepserver2",
+  "agentVersion": "0.1.0"
+}

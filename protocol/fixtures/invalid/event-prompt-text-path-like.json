@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "type": "event",
+  "seq": 7,
+  "kind": "prompt-opened",
+  "promptId": "p-2",
+  "expects": "next",
+  "labelId": "continue",
+  "blocking": true,
+  "text": "see reports/today"
+}

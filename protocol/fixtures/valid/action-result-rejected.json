@@ -1,0 +1,7 @@
+{
+  "v": 1,
+  "type": "action-result",
+  "actionId": "act-done-0002",
+  "outcome": "rejected",
+  "reason": "stale-prompt"
+}
