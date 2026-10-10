@@ -1,0 +1,186 @@
+@import 'tailwindcss';
+
+/* Colour tokens from docs/host-profile.md. Light in :root, dark under data-theme. */
+:root {
+  --app-bg: #f3f3f3;
+  --app-layer: rgb(255 255 255 / 0.5);
+  --app-card: rgb(255 255 255 / 0.7);
+  --app-card-hover: rgb(249 249 249 / 0.8);
+  --app-subtle: rgb(0 0 0 / 0.04);
+  --app-subtle-strong: rgb(0 0 0 / 0.06);
+  --app-stroke: rgb(0 0 0 / 0.08);
+  --app-stroke-strong: rgb(0 0 0 / 0.14);
+  --app-text: #1b1b1b;
+  --app-muted: #5d5d5d;
+  --app-faint: #8a8a8a;
+  --app-accent: #005fb8;
+  --app-accent-hover: #1a6fc0;
+  --app-on-accent: #ffffff;
+  --app-success: #0f7b0f;
+  --app-warning: #9d5d00;
+  --app-danger: #c42b1c;
+  --app-danger-bg: #fde7e9;
+  --app-track: rgb(0 0 0 / 0.1);
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --app-bg: #202020;
+  --app-layer: rgb(58 58 58 / 0.3);
+  --app-card: rgb(255 255 255 / 0.05);
+  --app-card-hover: rgb(255 255 255 / 0.08);
+  --app-subtle: rgb(255 255 255 / 0.06);
+  --app-subtle-strong: rgb(255 255 255 / 0.09);
+  --app-stroke: rgb(255 255 255 / 0.07);
+  --app-stroke-strong: rgb(255 255 255 / 0.12);
+  --app-text: #ffffff;
+  --app-muted: #c8c8c8;
+  --app-faint: #9a9a9a;
+  --app-accent: #60cdff;
+  --app-accent-hover: #5abce9;
+  --app-on-accent: #000000;
+  --app-success: #6ccb5f;
+  --app-warning: #fce100;
+  --app-danger: #ff99a4;
+  --app-danger-bg: #442726;
+  --app-track: rgb(255 255 255 / 0.12);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--app-bg);
+  --color-layer: var(--app-layer);
+  --color-card: var(--app-card);
+  --color-card-hover: var(--app-card-hover);
+  --color-subtle: var(--app-subtle);
+  --color-subtle-strong: var(--app-subtle-strong);
+  --color-stroke: var(--app-stroke);
+  --color-stroke-strong: var(--app-stroke-strong);
+  --color-text: var(--app-text);
+  --color-muted: var(--app-muted);
+  --color-faint: var(--app-faint);
+  --color-accent: var(--app-accent);
+  --color-accent-hover: var(--app-accent-hover);
+  --color-on-accent: var(--app-on-accent);
+  --color-success: var(--app-success);
+  --color-warning: var(--app-warning);
+  --color-danger: var(--app-danger);
+  --color-danger-bg: var(--app-danger-bg);
+  --color-track: var(--app-track);
+  --font-sans: 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Segoe UI Variable Display', 'Segoe UI', system-ui, sans-serif;
+}
+
+html {
+  font-size: 14px;
+  background: var(--app-bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--app-bg);
+  color: var(--app-text);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  -webkit-text-size-adjust: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--app-text);
+  outline-offset: 1px;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.card {
+  background: var(--app-card);
+  border: 1px solid var(--app-stroke);
+  border-radius: 8px;
+}
+
+/* Buttons are 44px high: touch targets. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid var(--app-stroke-strong);
+  background: var(--app-subtle);
+  color: var(--app-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn:hover:not(:disabled) {
+  background: var(--app-subtle-strong);
+}
+.btn:disabled {
+  color: var(--app-faint);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.btn-primary {
+  background: var(--app-accent);
+  border-color: var(--app-accent);
+  color: var(--app-on-accent);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--app-accent-hover);
+}
+.btn-danger {
+  color: var(--app-danger);
+}
+
+.field {
+  min-height: 44px;
+  width: 100%;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--app-stroke-strong);
+  background: var(--app-layer);
+  color: var(--app-text);
+  font: inherit;
+}
+
+.btn-icon {
+  padding: 0 12px;
+  min-width: 44px;
+}
+.spin {
+  animation: spin 1s linear infinite;
+}
+.indeterminate {
+  animation: indeterminate 1.4s ease-in-out infinite;
+}
+
+@keyframes indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spin,
+  .indeterminate {
+    animation: none !important;
+  }
+}

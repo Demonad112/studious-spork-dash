@@ -8,3 +8,4 @@ allowBuilds:
   workerd: true
 minimumReleaseAgeExclude:
   - '@types/node@26.6.5'
+  - '@lucide/vue@1.55.0'
