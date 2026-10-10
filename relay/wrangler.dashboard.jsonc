@@ -1,0 +1,17 @@
+{
+  "name": "remote-console-dashboard",
+  "main": "src/dashboard-worker.ts",
+  "compatibility_date": "2026-04-07",
+  "durable_objects": {
+    "bindings": [
+      { "name": "REGISTRY", "class_name": "RegistryDO", "script_name": "remote-console-relay" },
+      { "name": "SESSION", "class_name": "SessionDO", "script_name": "remote-console-relay" },
+    ],
+  },
+  "vars": {
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": "",
+    "ALLOWED_EMAILS": "",
+  },
+  "observability": { "enabled": true },
+}

@@ -3,25 +3,62 @@
   "$id": "https://remote-console.invalid/schemas/pairing.schema.json",
   "title": "Remote console HTTP pairing bodies, protocol version 1",
   "oneOf": [
-    { "$ref": "#/$defs/pairStartRequest" },
-    { "$ref": "#/$defs/pairStartResponse" },
-    { "$ref": "#/$defs/pairStatusRequest" },
-    { "$ref": "#/$defs/pairStatusResponse" },
-    { "$ref": "#/$defs/pairApproveRequest" }
+    {
+      "$ref": "#/$defs/pairStartRequest"
+    },
+    {
+      "$ref": "#/$defs/pairStartResponse"
+    },
+    {
+      "$ref": "#/$defs/pairStatusRequest"
+    },
+    {
+      "$ref": "#/$defs/pairStatusResponse"
+    },
+    {
+      "$ref": "#/$defs/pairLookupRequest"
+    },
+    {
+      "$ref": "#/$defs/pairLookupResponse"
+    },
+    {
+      "$ref": "#/$defs/pairApproveRequest"
+    }
   ],
   "$defs": {
-    "hex32": { "type": "string", "pattern": "^[0-9a-f]{32}$" },
-    "b64u32": { "type": "string", "pattern": "^[A-Za-z0-9_-]{43}$" },
-    "b64u64": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" },
-    "pairingCode": { "type": "string", "pattern": "^[0-9A-HJKMNP-TV-Z]{8}$" },
-    "fingerprint": { "type": "string", "pattern": "^([0-9a-f]{4}-){3}[0-9a-f]{4}$" },
+    "hex32": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "b64u32": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{43}$"
+    },
+    "b64u64": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{86}$"
+    },
+    "pairingCode": {
+      "type": "string",
+      "pattern": "^[0-9A-HJKMNP-TV-Z]{8}$"
+    },
+    "fingerprint": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{4}-){3}[0-9a-f]{4}$"
+    },
     "pairStartRequest": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "kind": { "const": "pair-start" },
-        "installId": { "$ref": "#/$defs/hex32" },
-        "publicKey": { "$ref": "#/$defs/b64u32" }
+        "kind": {
+          "const": "pair-start"
+        },
+        "installId": {
+          "$ref": "#/$defs/hex32"
+        },
+        "publicKey": {
+          "$ref": "#/$defs/b64u32"
+        }
       },
       "required": ["kind", "installId", "publicKey"]
     },
@@ -29,10 +66,20 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "kind": { "const": "pair-start-result" },
-        "pairingCode": { "$ref": "#/$defs/pairingCode" },
-        "fingerprint": { "$ref": "#/$defs/fingerprint" },
-        "expiresInSec": { "type": "integer", "minimum": 1, "maximum": 3600 }
+        "kind": {
+          "const": "pair-start-result"
+        },
+        "pairingCode": {
+          "$ref": "#/$defs/pairingCode"
+        },
+        "fingerprint": {
+          "$ref": "#/$defs/fingerprint"
+        },
+        "expiresInSec": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        }
       },
       "required": ["kind", "pairingCode", "fingerprint", "expiresInSec"]
     },
@@ -40,10 +87,20 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "kind": { "const": "pair-status" },
-        "installId": { "$ref": "#/$defs/hex32" },
-        "timestampMs": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
-        "signature": { "$ref": "#/$defs/b64u64" }
+        "kind": {
+          "const": "pair-status"
+        },
+        "installId": {
+          "$ref": "#/$defs/hex32"
+        },
+        "timestampMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "signature": {
+          "$ref": "#/$defs/b64u64"
+        }
       },
       "required": ["kind", "installId", "timestampMs", "signature"]
     },
@@ -51,8 +108,12 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "kind": { "const": "pair-status-result" },
-        "status": { "enum": ["pending", "approved", "expired", "rejected"] }
+        "kind": {
+          "const": "pair-status-result"
+        },
+        "status": {
+          "enum": ["pending", "approved", "expired", "rejected"]
+        }
       },
       "required": ["kind", "status"]
     },
@@ -60,17 +121,52 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "kind": { "const": "pair-approve" },
-        "pairingCode": { "$ref": "#/$defs/pairingCode" },
+        "kind": {
+          "const": "pair-approve"
+        },
+        "pairingCode": {
+          "$ref": "#/$defs/pairingCode"
+        },
         "displayName": {
           "type": "string",
           "minLength": 1,
           "maxLength": 40,
           "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
         },
-        "approve": { "type": "boolean" }
+        "approve": {
+          "type": "boolean"
+        }
       },
       "required": ["kind", "pairingCode", "displayName", "approve"]
+    },
+    "pairLookupRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "pair-lookup"
+        },
+        "pairingCode": {
+          "$ref": "#/$defs/pairingCode"
+        }
+      },
+      "required": ["kind", "pairingCode"]
+    },
+    "pairLookupResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "pair-lookup-result"
+        },
+        "fingerprint": {
+          "$ref": "#/$defs/fingerprint"
+        },
+        "rekey": {
+          "type": "boolean"
+        }
+      },
+      "required": ["kind", "fingerprint", "rekey"]
     }
   }
 }
