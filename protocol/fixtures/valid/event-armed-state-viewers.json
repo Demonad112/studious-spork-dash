@@ -1,0 +1,9 @@
+{
+  "v": 1,
+  "type": "event",
+  "seq": 0,
+  "kind": "armed-state",
+  "armed": true,
+  "expiresAtMs": null,
+  "viewers": 2
+}

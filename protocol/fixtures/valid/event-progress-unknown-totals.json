@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "type": "event",
+  "seq": 5,
+  "kind": "progress",
+  "step": "listing-source",
+  "percent": null,
+  "filesDone": 120,
+  "filesTotal": null,
+  "bytesDone": 0,
+  "bytesTotal": null,
+  "ok": 0,
+  "skipped": 0,
+  "failed": 0
+}

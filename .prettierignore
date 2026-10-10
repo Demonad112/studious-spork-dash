@@ -1,0 +1,8 @@
+node_modules
+target
+dist
+.wrangler
+pnpm-lock.yaml
+LICENSE
+Cargo.lock
+worker-configuration.d.ts

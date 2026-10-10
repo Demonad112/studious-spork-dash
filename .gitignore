@@ -1,0 +1,12 @@
+node_modules/
+target/
+dist/
+.wrangler/
+.dev.vars
+*.log
+.DS_Store
+coverage/
+.vite/
+playwright-report/
+test-results/
+.vitest/

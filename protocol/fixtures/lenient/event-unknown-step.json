@@ -1,0 +1,16 @@
+{
+  "input": {
+    "v": 1,
+    "type": "event",
+    "seq": 12,
+    "kind": "step",
+    "step": "compacting"
+  },
+  "normalized": {
+    "v": 1,
+    "type": "event",
+    "seq": 12,
+    "kind": "step",
+    "step": "other"
+  }
+}

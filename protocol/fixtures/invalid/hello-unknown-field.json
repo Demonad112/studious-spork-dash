@@ -1,0 +1,7 @@
+{
+  "v": 1,
+  "type": "hello",
+  "role": "browser",
+  "protocolVersions": [1],
+  "extra": true
+}

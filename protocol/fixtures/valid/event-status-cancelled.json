@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "type": "event",
+  "seq": 11,
+  "kind": "status",
+  "status": "cancelled",
+  "failureCode": "cancelled"
+}

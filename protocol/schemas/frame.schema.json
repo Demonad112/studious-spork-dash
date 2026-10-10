@@ -1,0 +1,837 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://remote-console.invalid/schemas/frame.schema.json",
+  "title": "Remote console WebSocket frame, protocol version 1",
+  "description": "Every frame is one JSON object of at most 16384 bytes. Receivers of events are lenient (unknown kinds and enum values are ignored or mapped to other); this schema describes what a v1 sender emits.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/hello"
+    },
+    {
+      "$ref": "#/$defs/authChallenge"
+    },
+    {
+      "$ref": "#/$defs/authResponse"
+    },
+    {
+      "$ref": "#/$defs/authOk"
+    },
+    {
+      "$ref": "#/$defs/event"
+    },
+    {
+      "$ref": "#/$defs/action"
+    },
+    {
+      "$ref": "#/$defs/actionResult"
+    },
+    {
+      "$ref": "#/$defs/resync"
+    },
+    {
+      "$ref": "#/$defs/resyncResult"
+    },
+    {
+      "$ref": "#/$defs/snapshot"
+    },
+    {
+      "$ref": "#/$defs/ping"
+    },
+    {
+      "$ref": "#/$defs/pong"
+    },
+    {
+      "$ref": "#/$defs/error"
+    }
+  ],
+  "$defs": {
+    "version": {
+      "const": 1
+    },
+    "hex32": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "promptId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9-]{1,32}$"
+    },
+    "actionId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9-]{8,64}$"
+    },
+    "appId": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]{1,32}$"
+    },
+    "agentVersion": {
+      "type": "string",
+      "pattern": "^[0-9A-Za-z.+-]{1,32}$"
+    },
+    "b64u32": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{43}$"
+    },
+    "b64u64": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{86}$"
+    },
+    "counter": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "nullableCounter": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/counter"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "percent": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "text": {
+      "type": "string",
+      "maxLength": 80,
+      "pattern": "^[^\\u0000-\\u001f\\u007f/\\\\]*$"
+    },
+    "role": {
+      "enum": ["agent", "browser"]
+    },
+    "jobKind": {
+      "enum": ["record-copy", "record-watch", "compare", "disk-scan", "simulated", "other"]
+    },
+    "step": {
+      "enum": ["listing-source", "copying", "watching", "finishing", "done", "other"]
+    },
+    "labelId": {
+      "enum": ["finish-and-check", "continue", "confirm", "other"]
+    },
+    "expects": {
+      "enum": ["next", "done"]
+    },
+    "closeReason": {
+      "enum": ["answered-remote", "answered-local", "auto", "superseded", "timed-out", "job-ended"]
+    },
+    "terminalStatus": {
+      "enum": ["completed", "cancelled", "failed"]
+    },
+    "failureCode": {
+      "enum": [
+        "cancelled",
+        "destination-not-writable",
+        "not-enough-space",
+        "source-unavailable",
+        "internal",
+        "other"
+      ]
+    },
+    "actionKind": {
+      "enum": ["status", "next", "done", "cancel"]
+    },
+    "rejectReason": {
+      "enum": [
+        "disarmed",
+        "expired",
+        "unknown-action",
+        "invalid-state",
+        "stale-prompt",
+        "malformed",
+        "rate-limited",
+        "locked"
+      ]
+    },
+    "sessionState": {
+      "enum": ["idle", "running", "awaiting-user", "completed", "cancelled", "failed"]
+    },
+    "errorCode": {
+      "enum": [
+        "malformed",
+        "unsupported-version",
+        "unauthorized",
+        "not-paired",
+        "locked",
+        "expired",
+        "too-many-connections",
+        "rate-limited",
+        "frame-too-large",
+        "internal"
+      ]
+    },
+    "progressFields": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "$ref": "#/$defs/step"
+        },
+        "percent": {
+          "$ref": "#/$defs/percent"
+        },
+        "filesDone": {
+          "$ref": "#/$defs/counter"
+        },
+        "filesTotal": {
+          "$ref": "#/$defs/nullableCounter"
+        },
+        "bytesDone": {
+          "$ref": "#/$defs/counter"
+        },
+        "bytesTotal": {
+          "$ref": "#/$defs/nullableCounter"
+        },
+        "ok": {
+          "$ref": "#/$defs/counter"
+        },
+        "skipped": {
+          "$ref": "#/$defs/counter"
+        },
+        "failed": {
+          "$ref": "#/$defs/counter"
+        }
+      },
+      "required": [
+        "step",
+        "percent",
+        "filesDone",
+        "filesTotal",
+        "bytesDone",
+        "bytesTotal",
+        "ok",
+        "skipped",
+        "failed"
+      ]
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "filesPlanned": {
+          "$ref": "#/$defs/counter"
+        },
+        "bytesPlanned": {
+          "$ref": "#/$defs/counter"
+        },
+        "ok": {
+          "$ref": "#/$defs/counter"
+        },
+        "okBytes": {
+          "$ref": "#/$defs/counter"
+        },
+        "skipped": {
+          "$ref": "#/$defs/counter"
+        },
+        "failed": {
+          "$ref": "#/$defs/counter"
+        },
+        "failedBytes": {
+          "$ref": "#/$defs/counter"
+        },
+        "durationMs": {
+          "$ref": "#/$defs/counter"
+        }
+      },
+      "required": [
+        "filesPlanned",
+        "bytesPlanned",
+        "ok",
+        "okBytes",
+        "skipped",
+        "failed",
+        "failedBytes",
+        "durationMs"
+      ]
+    },
+    "promptObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "promptId": {
+          "$ref": "#/$defs/promptId"
+        },
+        "expects": {
+          "$ref": "#/$defs/expects"
+        },
+        "labelId": {
+          "$ref": "#/$defs/labelId"
+        },
+        "blocking": {
+          "type": "boolean"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": ["promptId", "expects", "labelId", "blocking"]
+    },
+    "hello": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "hello"
+        },
+        "role": {
+          "$ref": "#/$defs/role"
+        },
+        "protocolVersions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 65535
+          }
+        },
+        "installId": {
+          "$ref": "#/$defs/hex32"
+        },
+        "sessionId": {
+          "$ref": "#/$defs/hex32"
+        },
+        "appId": {
+          "$ref": "#/$defs/appId"
+        },
+        "agentVersion": {
+          "$ref": "#/$defs/agentVersion"
+        }
+      },
+      "required": ["v", "type", "role", "protocolVersions"],
+      "if": {
+        "properties": {
+          "role": {
+            "const": "agent"
+          }
+        }
+      },
+      "then": {
+        "required": ["installId", "sessionId", "appId", "agentVersion"]
+      },
+      "else": {
+        "not": {
+          "anyOf": [
+            {
+              "required": ["installId"]
+            },
+            {
+              "required": ["sessionId"]
+            },
+            {
+              "required": ["appId"]
+            },
+            {
+              "required": ["agentVersion"]
+            }
+          ]
+        }
+      }
+    },
+    "authChallenge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "auth-challenge"
+        },
+        "nonce": {
+          "$ref": "#/$defs/b64u32"
+        }
+      },
+      "required": ["v", "type", "nonce"]
+    },
+    "authResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "auth-response"
+        },
+        "agentNonce": {
+          "$ref": "#/$defs/b64u32"
+        },
+        "signature": {
+          "$ref": "#/$defs/b64u64"
+        }
+      },
+      "required": ["v", "type", "agentNonce", "signature"]
+    },
+    "authOk": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "auth-ok"
+        },
+        "serverTimeMs": {
+          "$ref": "#/$defs/counter"
+        }
+      },
+      "required": ["v", "type", "serverTimeMs"]
+    },
+    "event": {
+      "type": "object",
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "event"
+        },
+        "seq": {
+          "$ref": "#/$defs/counter"
+        },
+        "kind": {
+          "type": "string"
+        }
+      },
+      "required": ["v", "type", "seq", "kind"],
+      "oneOf": [
+        {
+          "properties": {
+            "v": {},
+            "type": {},
+            "seq": {},
+            "kind": {
+              "const": "job-started"
+            },
+            "jobId": {
+              "$ref": "#/$defs/hex32"
+            },
+            "jobKind": {
+              "$ref": "#/$defs/jobKind"
+            }
+          },
+          "required": ["jobId", "jobKind"],
+          "additionalProperties": false,
+          "type": "object"
+        },
+        {
+          "properties": {
+            "v": {},
+            "type": {},
+            "seq": {},
+            "kind": {
+              "const": "step"
+            },
+            "step": {
+              "$ref": "#/$defs/step"
+            }
+          },
+          "required": ["step"],
+          "additionalProperties": false,
+          "type": "object"
+        },
+        {
+          "allOf": [
+            {
+              "$ref": "#/$defs/progressFields"
+            }
+          ],
+          "properties": {
+            "v": {},
+            "type": {},
+            "seq": {},
+            "kind": {
+              "const": "progress"
+            },
+            "step": {},
+            "percent": {},
+            "filesDone": {},
+            "filesTotal": {},
+            "bytesDone": {},
+            "bytesTotal": {},
+            "ok": {},
+            "skipped": {},
+            "failed": {}
+          },
+          "additionalProperties": false,
+          "type": "object"
+        },
+        {
+          "properties": {
+            "v": {},
+            "type": {},
+            "seq": {},
+            "kind": {
+              "const": "prompt-opened"
+            },
+            "promptId": {
+              "$ref": "#/$defs/promptId"
+            },
+            "expects": {
+              "$ref": "#/$defs/expects"
+            },
+            "labelId": {
+              "$ref": "#/$defs/labelId"
+            },
+            "blocking": {
+              "type": "boolean"
+            },
+            "text": {
+              "$ref": "#/$defs/text"
+            }
+          },
+          "required": ["promptId", "expects", "labelId", "blocking"],
+          "additionalProperties": false,
+          "type": "object"
+        },
+        {
+          "properties": {
+            "v": {},
+            "type": {},
+            "seq": {},
+            "kind": {
+              "const": "prompt-closed"
+            },
+            "promptId": {
+              "$ref": "#/$defs/promptId"
+            },
+            "reason": {
+              "$ref": "#/$defs/closeReason"
+            }
+          },
+          "required": ["promptId", "reason"],
+          "additionalProperties": false,
+          "type": "object"
+        },
+        {
+          "properties": {
+            "v": {},
+            "type": {},
+            "seq": {},
+            "kind": {
+              "const": "status"
+            },
+            "status": {
+              "$ref": "#/$defs/terminalStatus"
+            },
+            "failureCode": {
+              "$ref": "#/$defs/failureCode"
+            },
+            "summary": {
+              "$ref": "#/$defs/summary"
+            }
+          },
+          "required": ["status"],
+          "additionalProperties": false,
+          "type": "object"
+        },
+        {
+          "properties": {
+            "v": {},
+            "type": {},
+            "seq": {},
+            "kind": {
+              "const": "armed-state"
+            },
+            "armed": {
+              "type": "boolean"
+            },
+            "expiresAtMs": {
+              "$ref": "#/$defs/nullableCounter"
+            },
+            "viewers": {
+              "$ref": "#/$defs/counter"
+            }
+          },
+          "required": ["armed", "expiresAtMs"],
+          "additionalProperties": false,
+          "type": "object"
+        }
+      ]
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "action"
+        },
+        "actionId": {
+          "$ref": "#/$defs/actionId"
+        },
+        "action": {
+          "$ref": "#/$defs/actionKind"
+        },
+        "promptId": {
+          "$ref": "#/$defs/promptId"
+        }
+      },
+      "required": ["v", "type", "actionId", "action"],
+      "if": {
+        "properties": {
+          "action": {
+            "enum": ["next", "done"]
+          }
+        }
+      },
+      "then": {
+        "required": ["promptId"]
+      }
+    },
+    "actionResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "action-result"
+        },
+        "actionId": {
+          "$ref": "#/$defs/actionId"
+        },
+        "outcome": {
+          "enum": ["accepted", "rejected"]
+        },
+        "reason": {
+          "$ref": "#/$defs/rejectReason"
+        },
+        "state": {
+          "$ref": "#/$defs/sessionState"
+        }
+      },
+      "required": ["v", "type", "actionId", "outcome"],
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "rejected"
+          }
+        }
+      },
+      "then": {
+        "required": ["reason"]
+      },
+      "else": {
+        "not": {
+          "required": ["reason"]
+        }
+      }
+    },
+    "resync": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "resync"
+        },
+        "lastSeq": {
+          "$ref": "#/$defs/counter"
+        }
+      },
+      "required": ["v", "type", "lastSeq"]
+    },
+    "resyncResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "resync-result"
+        },
+        "fromSeq": {
+          "$ref": "#/$defs/counter"
+        },
+        "toSeq": {
+          "$ref": "#/$defs/counter"
+        },
+        "gap": {
+          "type": "boolean"
+        }
+      },
+      "required": ["v", "type", "fromSeq", "toSeq", "gap"]
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "snapshot"
+        },
+        "seq": {
+          "$ref": "#/$defs/counter"
+        },
+        "armed": {
+          "type": "boolean"
+        },
+        "state": {
+          "$ref": "#/$defs/sessionState"
+        },
+        "jobId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/hex32"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "jobKind": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/jobKind"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "progress": {
+          "oneOf": [
+            {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/progressFields"
+                }
+              ],
+              "properties": {
+                "step": {},
+                "percent": {},
+                "filesDone": {},
+                "filesTotal": {},
+                "bytesDone": {},
+                "bytesTotal": {},
+                "ok": {},
+                "skipped": {},
+                "failed": {}
+              },
+              "additionalProperties": false,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "prompt": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/promptObject"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "terminal": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "status": {
+                  "$ref": "#/$defs/terminalStatus"
+                },
+                "failureCode": {
+                  "$ref": "#/$defs/failureCode"
+                },
+                "summary": {
+                  "$ref": "#/$defs/summary"
+                }
+              },
+              "required": ["status"]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "v",
+        "type",
+        "seq",
+        "armed",
+        "state",
+        "jobId",
+        "jobKind",
+        "progress",
+        "prompt",
+        "terminal"
+      ]
+    },
+    "ping": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "ping"
+        }
+      },
+      "required": ["v", "type"]
+    },
+    "pong": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "pong"
+        }
+      },
+      "required": ["v", "type"]
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "v": {
+          "$ref": "#/$defs/version"
+        },
+        "type": {
+          "const": "error"
+        },
+        "code": {
+          "$ref": "#/$defs/errorCode"
+        },
+        "fatal": {
+          "type": "boolean"
+        }
+      },
+      "required": ["v", "type", "code", "fatal"]
+    }
+  }
+}

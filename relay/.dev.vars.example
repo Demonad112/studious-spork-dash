@@ -1,0 +1,3 @@
+# Copy to .dev.vars (untracked) for local development only.
+# The bypass works only on localhost and is never set in a tracked wrangler config.
+ALLOW_DEV_AUTH=true

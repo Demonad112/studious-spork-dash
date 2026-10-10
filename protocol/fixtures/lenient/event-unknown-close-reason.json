@@ -1,0 +1,11 @@
+{
+  "input": {
+    "v": 1,
+    "type": "event",
+    "seq": 12,
+    "kind": "prompt-closed",
+    "promptId": "p-9",
+    "reason": "power-cut"
+  },
+  "normalized": null
+}

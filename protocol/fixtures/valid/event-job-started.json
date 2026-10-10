@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "type": "event",
+  "seq": 1,
+  "kind": "job-started",
+  "jobId": "00112233445566778899aabbccddeeff",
+  "jobKind": "record-watch"
+}

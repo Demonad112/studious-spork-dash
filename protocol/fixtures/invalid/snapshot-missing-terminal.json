@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "type": "snapshot",
+  "seq": 0,
+  "armed": true,
+  "state": "idle",
+  "jobId": null,
+  "jobKind": null,
+  "progress": null,
+  "prompt": null
+}

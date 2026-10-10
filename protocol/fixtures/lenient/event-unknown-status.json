@@ -1,0 +1,10 @@
+{
+  "input": {
+    "v": 1,
+    "type": "event",
+    "seq": 12,
+    "kind": "status",
+    "status": "paused"
+  },
+  "normalized": null
+}

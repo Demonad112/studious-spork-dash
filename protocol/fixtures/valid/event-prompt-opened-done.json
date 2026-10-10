@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "type": "event",
+  "seq": 6,
+  "kind": "prompt-opened",
+  "promptId": "p-1",
+  "expects": "done",
+  "labelId": "finish-and-check",
+  "blocking": false
+}
