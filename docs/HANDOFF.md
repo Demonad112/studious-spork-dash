@@ -21,7 +21,7 @@ Then Batch 6 (e2e, hardening, `docs/security.md` threat table, `docs/deploy.md`,
 ## Needs the owner
 
 - Nothing yet. Cloudflare setup comes after Batch 6 (`docs/deploy.md`).
-- Batches 0 to 2 were pushed to `claude/new-session-tbofgd` at your request. The kickoff prompt said not to push; say so if you want later batches held back locally again.
+- Batches 0 to 4 were pushed and merged through draft PRs (#1 to #3), as the session instructions required. `CLAUDE.md` still says "no remote pushes, no PRs": that rule was written for the original brief, so say if you want it reworded or later batches held back locally.
 
 ## Notes
 
@@ -41,7 +41,7 @@ Then Batch 6 (e2e, hardening, `docs/security.md` threat table, `docs/deploy.md`,
 ## Prompt for the next chat
 
 ```
-Continue the remote console build in this repo (local main is the source of truth; push the designated session branch).
+Continue the remote console build in this repo (origin/main is the source of truth: run `git fetch origin main` first and branch from it; push the designated session branch).
 Read, in order: docs/HANDOFF.md, CLAUDE.md, docs/kickoff-prompt.md (the original brief, v2), docs/host-profile.md, docs/protocol.md, docs/architecture.md.
 Batches 0 to 4 are done and merged. Do Batch 5 (dashboard) as designed in HANDOFF "Next". Plan mode is over: build, with every gate green before merging a batch branch into main with --no-ff. Use CI=true for pnpm and --no-frozen-lockfile after dependency changes. Push the designated branch when a batch is merged and open a draft PR if none exists. Do not deploy or change any Cloudflare account. Update docs/HANDOFF.md at the end of each batch.
 ```
