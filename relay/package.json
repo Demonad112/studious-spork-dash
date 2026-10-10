@@ -1,0 +1,24 @@
+{
+  "name": "@remote-console/relay",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "dev:relay": "wrangler dev -c wrangler.relay.jsonc --port 8787 --inspector-port 9230",
+    "dev:dashboard": "wrangler dev -c wrangler.dashboard.jsonc --port 8788 --inspector-port 9231"
+  },
+  "dependencies": {
+    "@remote-console/protocol": "workspace:*",
+    "jose": "6.2.12"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "1.4.0",
+    "@cloudflare/workers-types": "5.20261009.1",
+    "@types/node": "26.6.5",
+    "typescript": "5.9.3",
+    "vitest": "5.0.3",
+    "wrangler": "4.149.0"
+  }
+}

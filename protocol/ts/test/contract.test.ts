@@ -7,6 +7,8 @@ import {
   decodeFrame,
   encodeFrame,
   findDenied,
+  decodePairing,
+  normalizePairingCode,
   sanitizeText,
 } from '../src/index.ts';
 import type { DenyList } from '../src/index.ts';
@@ -198,4 +200,30 @@ describe('pairing bodies', () => {
       expect(validatePairing(f.json)).toBe(false);
     });
   }
+});
+
+describe('pairing decoder', () => {
+  for (const f of loadFixtures('pairing/valid')) {
+    it(`${f.name} decodes strictly and unchanged`, () => {
+      const kind = (f.json as { kind: Parameters<typeof decodePairing>[1] }).kind;
+      const r = decodePairing(f.json, kind);
+      expect(r.ok, JSON.stringify(r)).toBe(true);
+      if (r.ok) expect(r.body).toEqual(f.json);
+    });
+  }
+  for (const f of loadFixtures('pairing/invalid')) {
+    it(`${f.name} is rejected by the decoder`, () => {
+      const kind = (f.json as { kind: Parameters<typeof decodePairing>[1] }).kind;
+      expect(decodePairing(f.json, kind).ok).toBe(false);
+    });
+  }
+  it('a body of the wrong kind is rejected', () => {
+    expect(decodePairing({ kind: 'pair-lookup', pairingCode: '7K2M9Q4T' }, 'pair-approve').ok).toBe(
+      false,
+    );
+  });
+  it('typed codes are normalised', () => {
+    expect(normalizePairingCode('7k2m-9q4t')).toBe('7K2M9Q4T');
+    expect(normalizePairingCode(' o1Il 0000 ')).toBe('01110000');
+  });
 });

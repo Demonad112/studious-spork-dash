@@ -16,14 +16,14 @@ Dashboard (Vue SPA, behind Cloudflare Access) <-> relay (Cloudflare Workers + Du
 
 ## Commands
 
-| Task                | Command                                                                                                      |
-| ------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Install             | `corepack pnpm install`                                                                                      |
-| All gates           | `corepack pnpm quality`                                                                                      |
-| TS tests            | `corepack pnpm test:ts`                                                                                      |
-| Rust tests          | `corepack pnpm test:rust` (uses `--no-fail-fast`)                                                            |
-| Windows-only clippy | `cargo clippy --manifest-path agent/Cargo.toml --all-targets --target x86_64-pc-windows-msvc -- -D warnings` |
-| Dev ports           | dashboard Vite 1440, `wrangler dev` 8787                                                                     |
+| Task                | Command                                                                                                                    |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Install             | `corepack pnpm install`                                                                                                    |
+| All gates           | `corepack pnpm quality`                                                                                                    |
+| TS tests            | `corepack pnpm test:ts`                                                                                                    |
+| Rust tests          | `corepack pnpm test:rust` (uses `--no-fail-fast`)                                                                          |
+| Windows-only clippy | `cargo clippy --manifest-path agent/Cargo.toml -p agent-core --all-targets --target x86_64-pc-windows-msvc -- -D warnings` |
+| Dev ports           | dashboard Vite 1440, `wrangler dev` 8787                                                                                   |
 
 ## Layout
 
@@ -35,6 +35,10 @@ Dashboard (Vue SPA, behind Cloudflare Access) <-> relay (Cloudflare Workers + Du
 - On the owner's laptop Windows Application Control can block test binaries (os error 4551): use `cargo test --workspace --no-fail-fast`.
 - The Bash tool halves backslashes in heredocs: write files containing them with Write/Edit.
 - Prettier covers `.md` and `.json`: format docs.
+- `CI=true` makes pnpm freeze the lockfile and stops it asking to reinstall: set it on every pnpm call in the sandbox, and add `--no-frozen-lockfile` after changing dependencies.
+- `esbuild` and `workerd` need `allowBuilds: true` in `pnpm-workspace.yaml` or their binaries are missing.
+- Do not run `pkill`/`pgrep -f` on `wrangler`: the pattern matches the Bash tool's own shell and kills it.
+- Vitest in `relay/` keeps Durable Object storage across tests in one file: reset what a test fills.
 - pnpm may add `minimumReleaseAgeExclude` entries to `pnpm-workspace.yaml` for freshly released pins. That is expected.
 
 ## Version deviations from the kickoff prompt
