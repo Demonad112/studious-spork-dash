@@ -506,11 +506,24 @@ impl Shared {
                 Ok(())
             }
             Ok(frame) => {
+                let first_resync = matches!(frame, Frame::Resync(_)) && !*synced;
                 if matches!(frame, Frame::Resync(_)) {
                     *synced = true;
                 }
                 for out in self.rc.handle_frame(frame) {
                     send_frame(ws, &out, self.cfg.connect_timeout).await?;
+                }
+                if first_resync {
+                    // Tells the relay when this session ends, so dashboards can show the countdown.
+                    let armed = Frame::Event(agent_core::EventFrame {
+                        seq: 0,
+                        body: agent_core::EventBody::ArmedState(agent_core::ArmedState {
+                            armed: true,
+                            expires_at_ms: self.rc.view().expires_at_ms,
+                            viewers: None,
+                        }),
+                    });
+                    send_frame(ws, &armed, self.cfg.connect_timeout).await?;
                 }
                 Ok(())
             }
