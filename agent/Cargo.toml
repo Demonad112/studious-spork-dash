@@ -1,0 +1,14 @@
+[workspace]
+resolver = "2"
+members = ["agent-core", "agent-ws", "agent-sim"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+authors = ["Demonad112"]
+rust-version = "1.85"
+
+[workspace.dependencies]
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"

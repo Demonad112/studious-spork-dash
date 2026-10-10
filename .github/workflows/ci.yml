@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: corepack enable
+      - run: corepack pnpm install --frozen-lockfile
+      - run: corepack pnpm exec prettier --check .
+      - run: corepack pnpm typecheck
+      - run: corepack pnpm test:ts
+
+  rust:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.97.0
+        with:
+          components: rustfmt, clippy
+      - run: cargo fmt --manifest-path agent/Cargo.toml --all --check
+      - run: cargo clippy --manifest-path agent/Cargo.toml --workspace --all-targets -- -D warnings
+      - run: cargo test --manifest-path agent/Cargo.toml --workspace --no-fail-fast

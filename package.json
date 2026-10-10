@@ -1,0 +1,31 @@
+{
+  "name": "remote-console",
+  "private": true,
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "author": "Demonad112",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "format": "prettier --write .",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "test:ts": "pnpm -r --if-present test",
+    "test:rust": "cargo test --manifest-path agent/Cargo.toml --workspace --no-fail-fast",
+    "test": "pnpm test:ts && pnpm test:rust",
+    "quality:rust": "cargo fmt --manifest-path agent/Cargo.toml --all --check && cargo clippy --manifest-path agent/Cargo.toml --workspace --all-targets -- -D warnings",
+    "quality": "prettier --check . && pnpm typecheck && pnpm quality:rust"
+  },
+  "lint-staged": {
+    "*.{ts,vue,js,mjs,json,md,yml,yaml,css,html}": "prettier --write",
+    "*.rs": "rustfmt --edition 2021"
+  },
+  "devDependencies": {
+    "husky": "9.1.7",
+    "lint-staged": "17.6.0",
+    "prettier": "3.9.9",
+    "typescript": "5.9.3"
+  }
+}

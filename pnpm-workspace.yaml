@@ -1,0 +1,7 @@
+packages:
+  - protocol/ts
+  - relay
+  - dashboard
+  - e2e
+minimumReleaseAgeExclude:
+  - '@types/node@26.6.5'
